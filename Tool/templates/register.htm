@@ -1,0 +1,41 @@
+{%extends 'base.htm'%}
+
+{%block content%}
+<div class="container col trial" align ="center">
+  <br><br><br><br>
+  <h1 align = "center">Register</h1>
+  <form  method="POST" enctype="multipart/form-data">
+    {{form.hidden_tag()}}
+    <div class="form-group">
+      {{form.username.label}}{{form.username(class = 'form-control col-md-6' ,placeholder="Username" )}}
+      <small id="emailHelp" class="form-text text-muted">It should be unique</small>
+      {%if form.username.errors%}
+        {%for error in form.username.errors%}
+          <small class = 'text-danger'>{{error}}</small>
+        {%endfor%}
+      {%endif%}
+    </div>
+    <div class="form-group">
+      {{form.password.label}}{{form.password(class = 'form-control col-md-6' ,placeholder="Password" )}}
+
+      {%if form.password.errors%}
+        {%for error in form.password.errors%}
+          <small class = 'text-danger'>{{error}}</small>
+        {%endfor%}
+      {%endif%}
+    </div>
+    <div class="form-group">
+      {{form.pass_confirm.label}}{{form.pass_confirm(class = 'form-control col-md-6' ,placeholder="Reenter Password" )}}
+      {%if form.pass_confirm.errors%}
+        {%for error in form.pass_confirm.errors%}
+          <small class = 'text-danger'>{{error}}</small>
+        {%endfor%}
+      {%endif%}
+    </div>
+    <div class="form-group">
+      {{form.submit(class ="btn btn-primary change")}}
+    </div>
+  </form>
+
+</div>
+{%endblock%}

@@ -1,0 +1,23 @@
+  {%extends 'base.htm'%}
+  {%block content%}
+  {%for i in teama%}
+      <br><br><br><br>
+      <div align = "center">
+        <h4><b>{{i.name}} vs {{teamb_name[0]}}</b></h3>
+        <br>
+
+  <b><h5>{{i.name}} ({{teamalength.pop(0)}})</h5 ></b>
+            {%for j in i.supporter%}
+                {{j.username}}
+            {%endfor%}
+  <hr>
+  <b><h5>{{teamb_name.pop(0)}} ({{teamblength.pop(0)}})</h5></b>
+              {%for j in teambsupporter[i.id-1].supporter%}
+                {{j.username}}
+              {%endfor%}
+
+
+
+  {%endfor%}
+    </div>
+  {%endblock%}

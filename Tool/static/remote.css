@@ -1,0 +1,12 @@
+/* table {
+	display: table;
+}
+table td {
+	display: table-cell;
+}
+table tr td {
+	display: block;
+} */
+table, th, td {
+  border: 1px solid black;
+}

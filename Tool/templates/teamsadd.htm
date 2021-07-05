@@ -1,0 +1,28 @@
+{%extends 'base.htm'%}
+
+{%block content%}
+<div class="container col trial" align ="center">
+  <br><br><br><br>
+  <h1 align = "center">Register</h1>
+  <form  method="POST" enctype="multipart/form-data">
+    {{form.hidden_tag()}}
+    <div class="form-group">
+      {{form.teama.label}}{{form.teama(class = 'form-control col-md-6' ,placeholder="Team A" )}} vs {{form.teamb.label}}{{form.teamb(class = 'form-control col-md-6' ,placeholder="Team B" )}}
+      {%if form.teama.errors%}
+        {%for error in form.teama.errors%}
+          <small class = 'text-danger'>Fill team a</small>
+        {%endfor%}
+      {%endif%}
+      {%if form.teamb.errors%}
+        {%for error in form.teamb.errors%}
+          <small class = 'text-danger'>Fill team b</small>
+        {%endfor%}
+      {%endif%}
+    </div>
+    <div class="form-group">
+      {{form.submit(class ="btn btn-primary change")}}
+    </div>
+  </form>
+
+</div>
+{%endblock%}

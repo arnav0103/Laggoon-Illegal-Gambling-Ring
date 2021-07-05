@@ -1,0 +1,15 @@
+{%extends 'base.htm'%}
+{%block content%}
+{%for i in teama_player%}
+    <br><br><br><br>
+    <div align = "center">
+      {%if i in playera_id%}
+      <a style="padding: 1%; background-color: #44449C;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%;  " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a>
+      {%elif i in playerb_id%}
+      <a style="padding: 1%;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%;   background-color: #44449C; " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a>
+      {%else%}
+      <a style="padding: 1%;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%; " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a>
+      {%endif%}
+    </div>
+{%endfor%}
+{%endblock%}
