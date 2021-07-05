@@ -3,7 +3,9 @@
 {%for i in teama_player%}
     <br><br><br><br>
     <div align = "center">
-      {%if i in playera_id%}
+      {%if teamasupporter[i-1].a_date.strftime('%d-%m-%Y') <= now.strftime('%d-%m-%Y')%}
+      <a style="padding: 1%; background-color: #44449C;" class="btn btn-primary clicks" href="">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%;  " class="btn btn-primary clicks" href="">{{teamb_name.pop(0)}}</a> <br> <b>Voting is over</b>
+      {%elif i in playera_id%}
       <a style="padding: 1%; background-color: #44449C;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%;  " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a>
       {%elif i in playerb_id%}
       <a style="padding: 1%;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%;   background-color: #44449C; " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a>

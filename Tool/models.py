@@ -35,6 +35,7 @@ class TeamA(db.Model):
     __tablename__ = 'teama'
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String)
+    a_date = db.Column(db.DateTime,nullable=True,default=datetime.now)
 
     def __init__(self,name):
         self.name = name

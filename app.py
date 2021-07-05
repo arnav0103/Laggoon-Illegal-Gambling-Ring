@@ -5,7 +5,7 @@ from flask import render_template,request, url_for, redirect, flash ,abort, json
 from flask_login import current_user, login_required, login_user , logout_user
 from sqlalchemy import desc, asc
 import os
-
+from datetime import datetime
 
 @app.route('/' , methods = ['GET' , 'POST'])
 def index():
@@ -68,6 +68,8 @@ def teamadd():
             db.session.add(teama)
             db.session.add(teamb)
             db.session.commit()
+            teama.a_date=form.date.data
+            db.session.commit()
             return redirect(url_for('teamadd'))
     return render_template('teamsadd.htm' , form=form)
 
@@ -76,8 +78,10 @@ def teamadd():
 def teama(ids):
     teama = TeamA.query.get(ids)
     teamb = TeamB.query.get(ids)
+    now = datetime.now()
+    if teama.a_date.strftime('%d-%m-%Y') <= now.strftime('%d-%m-%Y'):
+        abort(403)
     if teama in current_user.teama:
-        print('yes')
         current_user.teama.remove(teama)
         print(current_user.teama)
         db.session.commit()
@@ -97,6 +101,9 @@ def teama(ids):
 def teamb(ids):
     teama = TeamA.query.get(ids)
     teamb = TeamB.query.get(ids)
+    now = datetime.now()
+    if teama.a_date.strftime('%d-%m-%Y') <= now.strftime('%d-%m-%Y'):
+        abort(403)
     if teamb in current_user.teamb:
         current_user.teamb.remove(teamb)
         db.session.commit()
@@ -114,24 +121,31 @@ def teamb(ids):
 def select():
     teama = TeamA.query.order_by(TeamA.id.asc())
     teamb = TeamB.query.order_by(TeamB.id.asc())
+    now = datetime.now()
     teama_name = []
     teamb_name = []
     teama_player = []
     teamb_player = []
+    teamasupporter = []
     playera_id = []
     playerb_id = []
-    for i in teama:
-        teama_player.append(i.id)
-    for i in teama:
-        teama_name.append(i.name)
-    for i in teamb:
-        teamb_name.append(i.name)
-    for i in current_user.teama:
-        playera_id.append(i.id)
-    for i in current_user.teamb:
-        playerb_id.append(i.id)
-    return render_template('select.htm' , teama = teama, teamb = teamb , teama_player = teama_player , teamb_player = teamb_player ,
-                            teama_name = teama_name , teamb_name = teamb_name , playera_id = playera_id , playerb_id = playerb_id)
+    if teama:
+        for i in teama:
+            teama_player.append(i.id)
+        for i in teama:
+            teama_name.append(i.name)
+        for i in teamb:
+            teamb_name.append(i.name)
+        for i in current_user.teama:
+            playera_id.append(i.id)
+        for i in current_user.teamb:
+            playerb_id.append(i.id)
+        for i in teama:
+            teamasupporter.append(i)
+    else:
+        pass
+    return render_template('select.htm' , teama = teama, teamb = teamb , teama_player = teama_player , teamb_player = teamb_player , now = now,
+                            teama_name = teama_name , teamb_name = teamb_name , playera_id = playera_id , playerb_id = playerb_id , teamasupporter = teamasupporter)
 
 @app.route('/show/results', methods = ['GET', 'POST'])
 @login_required

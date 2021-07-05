@@ -30,4 +30,5 @@ class LoginForm(FlaskForm):
 class TeamsAddForm(FlaskForm):
     teama = StringField('Team A', validators=[DataRequired()])
     teamb = StringField('Team B', validators=[DataRequired()])
+    date = DateField('When will event start' , format='%Y-%m-%d', validators=[DataRequired()])
     submit = SubmitField('Submit')
