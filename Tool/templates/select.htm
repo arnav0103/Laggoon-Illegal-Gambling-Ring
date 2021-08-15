@@ -3,14 +3,25 @@
 {%for i in teama_player%}
     <br><br><br><br>
     <div align = "center">
-      {%if teamasupporter[i-1].a_date.strftime('%d-%m-%Y') <= now.strftime('%d-%m-%Y')%}
-      <a style="padding: 1%; background-color: #44449C;" class="btn btn-primary clicks" href="">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%;  " class="btn btn-primary clicks" href="">{{teamb_name.pop(0)}}</a> <br> <b>Voting is over</b>
-      {%elif i in playera_id%}
-      <a style="padding: 1%; background-color: #44449C;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%;  " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a>
-      {%elif i in playerb_id%}
-      <a style="padding: 1%;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%;   background-color: #44449C; " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a>
+      {%if TeamA.query.get(i).lock == 'true' and mars == 'false'%}
       {%else%}
-      <a style="padding: 1%;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%; " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a>
+        {%if i in playera_id%}
+          {%if TeamA.query.get(i).lock == 'true'%}
+            <h3>Locked</h3>
+          {%endif%}
+          <a style="padding: 1%; background-color: #44449C;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%;  " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a> {%if current_user.username == 'Admin1' or current_user.username == 'Admin2'%} <a href="{{url_for('lock', ids = i)}}" >lock/unlock</a> <a href="{{url_for('delete', ids = i)}}" >DELETE</a>{%endif%}
+        {%elif i in playerb_id%}
+            {%if TeamA.query.get(i).lock == 'true'%}
+              <h3>Locked</h3>
+            {%endif%}
+            <a style="padding: 1%;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%;   background-color: #44449C; " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a>{%if current_user.username == 'Admin1' or current_user.username == 'Admin2'%} <a href="{{url_for('lock', ids = i)}}" >lock/unlock</a> <a href="{{url_for('delete', ids = i)}}" >DELETE</a>{%endif%}
+
+        {%else%}
+            {%if TeamA.query.get(i).lock == 'true'%}
+              <h3>Locked</h3>
+            {%endif%}
+            <a style="padding: 1%;" class="btn btn-primary clicks" href="{{url_for('teama', ids = i)}}">{{teama_name.pop(0)}}</a> vs <a style="padding: 1%; " class="btn btn-primary clicks" href="{{url_for('teamb', ids = i)}}">{{teamb_name.pop(0)}}</a>{%if current_user.username == 'Admin1' or current_user.username == 'Admin2'%} <a href="{{url_for('lock', ids = i)}}" >lock/unlock</a> <a href="{{url_for('delete', ids = i)}}" >DELETE</a>{%endif%}
+          {%endif%}
       {%endif%}
     </div>
 {%endfor%}

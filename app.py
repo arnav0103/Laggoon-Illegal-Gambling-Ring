@@ -63,12 +63,10 @@ def teamadd():
         abort(403)
     else:
         if form.validate_on_submit():
-            teama = TeamA(name = form.teama.data)
-            teamb = TeamB(name = form.teamb.data)
+            teama = TeamA(name = form.teama.data , lock = 'false')
+            teamb = TeamB(name = form.teamb.data, lock = 'false')
             db.session.add(teama)
             db.session.add(teamb)
-            db.session.commit()
-            teama.a_date=form.date.data
             db.session.commit()
             return redirect(url_for('teamadd'))
     return render_template('teamsadd.htm' , form=form)
@@ -79,7 +77,7 @@ def teama(ids):
     teama = TeamA.query.get(ids)
     teamb = TeamB.query.get(ids)
     now = datetime.now()
-    if teama.a_date.strftime('%d-%m-%Y') <= now.strftime('%d-%m-%Y'):
+    if teama.lock == 'true':
         abort(403)
     if teama in current_user.teama:
         current_user.teama.remove(teama)
@@ -102,7 +100,7 @@ def teamb(ids):
     teama = TeamA.query.get(ids)
     teamb = TeamB.query.get(ids)
     now = datetime.now()
-    if teama.a_date.strftime('%d-%m-%Y') <= now.strftime('%d-%m-%Y'):
+    if teama.lock == 'true':
         abort(403)
     if teamb in current_user.teamb:
         current_user.teamb.remove(teamb)
@@ -119,6 +117,7 @@ def teamb(ids):
 @app.route('/select' , methods = ['GET' , 'POST'])
 @login_required
 def select():
+    mars = 'false'
     teama = TeamA.query.order_by(TeamA.id.asc())
     teamb = TeamB.query.order_by(TeamB.id.asc())
     now = datetime.now()
@@ -140,12 +139,16 @@ def select():
             playera_id.append(i.id)
         for i in current_user.teamb:
             playerb_id.append(i.id)
-        for i in teama:
+        for i in teama_player:
+            print(i)
             teamasupporter.append(i)
+            if current_user.username == 'Admin1' or current_user.username == 'Admin2':
+                mars = 'true'
     else:
         pass
     return render_template('select.htm' , teama = teama, teamb = teamb , teama_player = teama_player , teamb_player = teamb_player , now = now,
-                            teama_name = teama_name , teamb_name = teamb_name , playera_id = playera_id , playerb_id = playerb_id , teamasupporter = teamasupporter)
+                            teama_name = teama_name , teamb_name = teamb_name , playera_id = playera_id , playerb_id = playerb_id , teamasupporter = teamasupporter, mars = mars,
+                            TeamA = TeamA)
 
 @app.route('/show/results', methods = ['GET', 'POST'])
 @login_required
@@ -160,7 +163,6 @@ def show_score():
     teamalength = []
     teamblength = []
     if current_user.username != 'Admin1' and current_user.username != 'Admin2':
-        print(current_user.username)
         abort(403)
     else:
         for i in teama:
@@ -185,6 +187,34 @@ def show_score():
             teamblength.append(len(a))
 
     return render_template('result.htm', teama = teama, teamb = teamb , teama_name = teama_name, teamb_name = teamb_name, teama_player = teama_player,
-                        teamasupporter = teamasupporter , teambsupporter = teambsupporter , teamalength = teamalength , teamblength = teamblength)
+                        teamasupporter = teamasupporter , teambsupporter = teambsupporter , teamalength = teamalength , teamblength = teamblength,TeamA = TeamA)
+@app.route('/lock/<ids>' , methods = ['GET' , 'POST'])
+@login_required
+def lock(ids):
+    if current_user.username != 'Admin1' and current_user.username != 'Admin2':
+        print(current_user.username)
+        abort(403)
+    teama = TeamA.query.get(ids)
+    teamb = TeamB.query.get(ids)
+    if teama.lock == 'false':
+        teama.lock = 'true'
+        teamb.lock = 'true'
+    else:
+        teama.lock = 'false'
+        teamb.lock = 'false'
+    db.session.commit()
+    return redirect(url_for('select'))
+
+@app.route('/delete/<ids>' , methods = ['GET' , 'POST'])
+@login_required
+def delete(ids):
+    if current_user.username != 'Admin1' and current_user.username != 'Admin2':
+        abort(403)
+    teama = TeamA.query.get(ids)
+    teamb = TeamB.query.get(ids)
+    db.session.delete(teama)
+    db.session.delete(teamb)
+    db.session.commit()
+    return redirect(url_for('select'))
 if __name__ == '__main__':
     app.run(debug=True)

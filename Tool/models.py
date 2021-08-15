@@ -35,15 +35,17 @@ class TeamA(db.Model):
     __tablename__ = 'teama'
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String)
-    a_date = db.Column(db.DateTime,nullable=True,default=datetime.now)
+    lock = db.Column(db.String)
 
-    def __init__(self,name):
+    def __init__(self,name,lock):
         self.name = name
+        self.lock = lock
 
 class TeamB(db.Model):
     __tablename__ = 'teamb'
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String)
-
-    def __init__(self,name):
+    lock = db.Column(db.String)
+    def __init__(self,name,lock):
         self.name = name
+        self.lock = lock

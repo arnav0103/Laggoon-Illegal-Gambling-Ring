@@ -12,7 +12,7 @@
             {%endfor%}
   <hr>
   <b><h5>{{teamb_name.pop(0)}} ({{teamblength.pop(0)}})</h5></b>
-              {%for j in teambsupporter[i.id-1].supporter%}
+              {%for j in TeamA.query.get(i.id).lock.supporter%}
                 {{j.username}}
               {%endfor%}
 
